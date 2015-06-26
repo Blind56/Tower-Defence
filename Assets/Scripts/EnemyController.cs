@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
 public class EnemyController : MonoBehaviour {
 
 	public float speed = 0.5f;
-
+	[Range(0,100)]	
+	public float health = 100;
+	
+	private TowerController towerController;
 	private GameObject enemyPath;
 	private Transform[] waypoints;
 	private int i = 0;
+	private bool canRecieveDamage = true;
 
 	void Start () {
 		speed /= 10;
@@ -15,6 +19,12 @@ public class EnemyController : MonoBehaviour {
 		waypoints = EnemySpawner.GetChildren (enemyPath);
 	}
 
+	void Update () {
+		if (health <= 0) {
+			Debug.Log("I'm killed");
+			Destroy (this.gameObject);
+		}
+	}
 
 	void FixedUpdate () {
 		if (i < waypoints.Length) {
@@ -31,5 +41,26 @@ public class EnemyController : MonoBehaviour {
 				i++;
 			}
 		}
+	}
+
+	void OnTriggerStay (Collider c) {
+		if (c.gameObject.tag == "Tower") {
+			towerController = c.gameObject.GetComponent<TowerController>();
+			if (canRecieveDamage) {
+				StartCoroutine(TakeDamage(towerController.fireRate));
+				//Debug.Log("I'm about to get hit!");
+			}
+		}
+	}
+
+	IEnumerator TakeDamage (float frequency) {
+		canRecieveDamage = false;
+		if (health > 0) {
+			health -= towerController.damages [towerController.currLevel - 1];
+		} else {
+			health = 0;
+		}
+		yield return new WaitForSeconds(frequency);
+		canRecieveDamage = true;
 	}
 }
