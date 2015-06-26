@@ -106,7 +106,7 @@ public class TowerPlacer : MonoBehaviour {
 	public void PlaceTower() {
 		if (!placed) {	
 
-			if (gameManager.money > towerController.cost) { 	
+			if (gameManager.money >= towerController.cost) { 	
 				gameManager.money -= towerController.cost;
 				Instantiate (tower, new Vector3 (placePosition.x, placePosition.y + groundClearence, placePosition	.z), Quaternion.Euler (0, 45, 0));
 				currentSpot.GetComponent<SpotState>().placed = true;
