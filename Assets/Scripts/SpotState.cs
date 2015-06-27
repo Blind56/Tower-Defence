@@ -4,5 +4,5 @@ using System.Collections;
 public class SpotState : MonoBehaviour {
 
 	public bool placed;
-
+	public GameObject towerPlaced;
 }
