@@ -10,6 +10,7 @@ public class TowerPlacer : MonoBehaviour {
 	private GameManager gameManager;
 	private TowerController towerController;
 	private GameObject addPanel;
+	private GameObject upgradePanel;
 	private GameObject towerSpots;
 	private GameObject currentSpot;
 	private Transform[] spots;
@@ -27,6 +28,7 @@ public class TowerPlacer : MonoBehaviour {
 
 	void Start() { 
 		addPanel = GameObject.FindGameObjectWithTag("Add panel");
+		upgradePanel = GameObject.FindGameObjectWithTag("Upgrade panel");
 		towerSpots = GameObject.FindGameObjectWithTag ("Tower spots");
 		towerController = tower.GetComponent<TowerController>();
 		gameManager = GetComponent<GameManager>();
@@ -49,9 +51,10 @@ public class TowerPlacer : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay (position);
 			RaycastHit hit = new RaycastHit ();
 
+			spotFound = false;
+			misclicked = true;
 			if (Physics.Raycast (ray, out hit)) {
-				spotFound = false;
-				misclicked = true;
+
 				foreach (Transform s in spots) {
 					if (hit.collider.gameObject == s.gameObject) {
 						spot = s;
@@ -75,7 +78,12 @@ public class TowerPlacer : MonoBehaviour {
 					if (spotFound) {
 						currentSpot = spot.gameObject;
 						placed = currentSpot.gameObject.GetComponent<SpotState> ().placed;
-						addPanel.GetComponent<RectTransform> ().position = position;
+						if (placed) {
+							upgradePanel.GetComponent<RectTransform> ().position = position;
+						}
+						else {
+							addPanel.GetComponent<RectTransform> ().position = position;
+						}
 						placePosition = spot.transform.position;
 						//Debug.DrawLine (ray.origin, hit.point);
 						poppedUp = true;
@@ -87,6 +95,7 @@ public class TowerPlacer : MonoBehaviour {
 					if (misclicked) { /*&& urrentSpot != spot.gameObject)*/
 						if (currentSpot != spot.gameObject) {
 							addPanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+							upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
 							currentSpot = null;
 							poppedUp = false;
 							misclicked = false;
@@ -104,15 +113,18 @@ public class TowerPlacer : MonoBehaviour {
 	}
 
 	public void PlaceTower() {
-		if (!placed) {	
-
-			if (gameManager.money >= towerController.cost) { 	
-				gameManager.money -= towerController.cost;
+		if (!placed) {
+			if (gameManager.money >= towerController.upgradeCosts[towerController.currLevel - 1]) { 	
+				gameManager.money -= towerController.upgradeCosts[towerController.currLevel - 1];
 				Instantiate (tower, new Vector3 (placePosition.x, placePosition.y + groundClearence, placePosition	.z), Quaternion.Euler (0, 45, 0));
-				currentSpot.GetComponent<SpotState>().placed = true;
-				currentSpot = null;
-				placed = true;			
+				GameObject[] towersArr = GameObject.FindGameObjectsWithTag("Tower");
+				SpotState spotState = currentSpot.GetComponent<SpotState>();
+				spotState.placed = true;	
+				spotState.towerPlaced = towersArr[towersArr.Length - 1];
 				addPanel.GetComponent<RectTransform>().position = new Vector2(Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+				upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+				currentSpot = null;
+				placed = true;	
 				poppedUp = false;
 			}
 			else {
@@ -124,7 +136,25 @@ public class TowerPlacer : MonoBehaviour {
 		}
 	}
 
-	public void OnAddPanelDown() {
-		spotFound = true;
+	public void UpgradeTower () {
+		towerController = currentSpot.GetComponent<SpotState> ().towerPlaced.GetComponent<TowerController> ();
+		if (gameManager.money >= towerController.upgradeCosts[towerController.currLevel - 1]) {
+			if (towerController.currLevel < towerController.damages.Length) {
+				towerController.currLevel += 1;
+				//towerController.currLevel = Mathf.Clamp (towerController.currLevel, 1, towerController.damages.Length);
+				gameManager.money -= towerController.upgradeCosts[towerController.currLevel - 1];
+				currentSpot = null;
+				placed = true;			
+				addPanel.GetComponent<RectTransform>().position = new Vector2(Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+				upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+				poppedUp = false;
+			}
+			else {
+				Debug.Log("Maximum Level Reached");
+			}
+		}
+		else {
+			Debug.Log("Not enough money");
+		}
 	}
 }

@@ -21,7 +21,7 @@ public class EnemyController : MonoBehaviour {
 
 	void Update () {
 		if (health <= 0) {
-			Debug.Log("I'm killed");
+			//Debug.Log("I'm killed");
 			Destroy (this.gameObject);
 		}
 	}
@@ -41,6 +41,11 @@ public class EnemyController : MonoBehaviour {
 				i++;
 			}
 		}
+		if (i == waypoints.Length) {
+			Debug.Log("Game Over");
+			Time.timeScale = 0;
+			GameObject.FindGameObjectWithTag("Game manager").SetActive(false);
+		}
 	}
 
 	void OnTriggerStay (Collider c) {
@@ -55,11 +60,8 @@ public class EnemyController : MonoBehaviour {
 
 	IEnumerator TakeDamage (float frequency) {
 		canRecieveDamage = false;
-		if (health > 0) {
-			health -= towerController.damages [towerController.currLevel - 1];
-		} else {
-			health = 0;
-		}
+		health -= towerController.damages [towerController.currLevel - 1];
+		health = Mathf.Max (health, 0);
 		yield return new WaitForSeconds(frequency);
 		canRecieveDamage = true;
 	}
