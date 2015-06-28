@@ -4,12 +4,17 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
 	public float money;
+	[HideInInspector]
 	public bool begin;
 	
 	private Transform[] text;
 
+	void Start () {
+		Time.timeScale = 1;
+	}
+
 	public void LowerResolution(){
-		Screen.SetResolution (854, 480, true);
+		Screen.SetResolution (960, 540, true);
 	}	
 
 	public void Restart() {

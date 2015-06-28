@@ -11,7 +11,6 @@ public class EnemyController : MonoBehaviour {
 	private GameObject enemyPath;
 	private Transform[] waypoints;
 	private int i = 0;
-	private bool canRecieveDamage = true;
 
 	void Start () {
 		speed /= 10;
@@ -46,23 +45,9 @@ public class EnemyController : MonoBehaviour {
 			Time.timeScale = 0;
 			GameObject.FindGameObjectWithTag("Game manager").SetActive(false);
 		}
-	}
-
-	void OnTriggerStay (Collider c) {
 		if (c.gameObject.tag == "Tower") {
 			towerController = c.gameObject.GetComponent<TowerController>();
-			if (canRecieveDamage) {
-				StartCoroutine(TakeDamage(towerController.fireRate));
-				//Debug.Log("I'm about to get hit!");
-			}
+			towerController.target = this;
 		}
-	}
-
-	IEnumerator TakeDamage (float frequency) {
-		canRecieveDamage = false;
-		health -= towerController.damages [towerController.currLevel - 1];
-		health = Mathf.Max (health, 0);
-		yield return new WaitForSeconds(frequency);
-		canRecieveDamage = true;
 	}
 }

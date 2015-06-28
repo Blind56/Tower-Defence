@@ -50,11 +50,12 @@ public class CameraMovement : MonoBehaviour {
 		}
 		else {
 			inputType = true;
-			x = -Input.GetAxis ("Horizontal");
-			z = -Input.GetAxis ("Vertical");
+			x = Input.GetAxis ("Horizontal");
+			z = Input.GetAxis ("Vertical");
 		}
 		if (inputType) {
-			transform.position += (new Vector3 (x * cameraSensitivity, 0, z * cameraSensitivity));
+			transform.Translate (new Vector3(0,1,1) * z * cameraSensitivity);
+			transform.Translate (Vector3.right * x * cameraSensitivity);
 		}
 	}
 }

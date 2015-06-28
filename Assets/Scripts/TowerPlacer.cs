@@ -13,6 +13,7 @@ public class TowerPlacer : MonoBehaviour {
 	private GameObject upgradePanel;
 	private GameObject towerSpots;
 	private GameObject currentSpot;
+	private GameObject currPanel;
 	private Transform[] spots;
 	private Transform spot;
 	private bool inputType;
@@ -61,13 +62,18 @@ public class TowerPlacer : MonoBehaviour {
 						spotFound = true;
 					}
 				}
+				bool UIEvent = false;
 				if (Input.touchSupported) {
-					if (EventSystem.current.IsPointerOverGameObject (fingerId)) {
-						spotFound = true;
-					}				
+					UIEvent = EventSystem.current.IsPointerOverGameObject (fingerId);
 				}
 				else {
-					if (EventSystem.current.IsPointerOverGameObject ()) {
+					UIEvent = EventSystem.current.IsPointerOverGameObject ();
+				}
+				if (UIEvent) {
+					GameObject currUIElement = EventSystem.current.currentSelectedGameObject;
+					if ((currUIElement == addPanel) || (currUIElement == upgradePanel)
+											|| (currUIElement.transform.parent.gameObject == addPanel)
+					    					|| (currUIElement.transform.parent.gameObject == upgradePanel)) {
 						spotFound = true;
 					}
 				}
@@ -80,9 +86,11 @@ public class TowerPlacer : MonoBehaviour {
 						placed = currentSpot.gameObject.GetComponent<SpotState> ().placed;
 						if (placed) {
 							upgradePanel.GetComponent<RectTransform> ().position = position;
+							currPanel = upgradePanel;
 						}
 						else {
 							addPanel.GetComponent<RectTransform> ().position = position;
+							currPanel = addPanel;
 						}
 						placePosition = spot.transform.position;
 						//Debug.DrawLine (ray.origin, hit.point);
@@ -96,6 +104,7 @@ public class TowerPlacer : MonoBehaviour {
 						if (currentSpot != spot.gameObject) {
 							addPanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
 							upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+							currPanel = null;
 							currentSpot = null;
 							poppedUp = false;
 							misclicked = false;
@@ -106,7 +115,7 @@ public class TowerPlacer : MonoBehaviour {
 		}
 		if (poppedUp) {
 			if (Camera.main.transform.position != cameraCurrPosition) {
-				addPanel.GetComponent<RectTransform> ().position = Camera.main.WorldToScreenPoint(spot.transform.position);
+				currPanel.GetComponent<RectTransform> ().position = Camera.main.WorldToScreenPoint(spot.transform.position);
 			}
 			cameraCurrPosition = Camera.main.transform.position;
 		}
@@ -116,7 +125,7 @@ public class TowerPlacer : MonoBehaviour {
 		if (!placed) {
 			if (gameManager.money >= towerController.upgradeCosts[towerController.currLevel - 1]) { 	
 				gameManager.money -= towerController.upgradeCosts[towerController.currLevel - 1];
-				Instantiate (tower, new Vector3 (placePosition.x, placePosition.y + groundClearence, placePosition	.z), Quaternion.Euler (0, 45, 0));
+				Instantiate (tower, new Vector3 (placePosition.x, placePosition.y + groundClearence, placePosition	.z), new Quaternion());
 				GameObject[] towersArr = GameObject.FindGameObjectsWithTag("Tower");
 				SpotState spotState = currentSpot.GetComponent<SpotState>();
 				spotState.placed = true;	
@@ -141,7 +150,7 @@ public class TowerPlacer : MonoBehaviour {
 		if (gameManager.money >= towerController.upgradeCosts[towerController.currLevel - 1]) {
 			if (towerController.currLevel < towerController.damages.Length) {
 				towerController.currLevel += 1;
-				//towerController.currLevel = Mathf.Clamp (towerController.currLevel, 1, towerController.damages.Length);
+				towerController.gameObject.GetComponent<SphereCollider>().radius = towerController.radiuses[towerController.currLevel - 1];
 				gameManager.money -= towerController.upgradeCosts[towerController.currLevel - 1];
 				currentSpot = null;
 				placed = true;			
