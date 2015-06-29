@@ -45,9 +45,23 @@ public class EnemyController : MonoBehaviour {
 			Time.timeScale = 0;
 			GameObject.FindGameObjectWithTag("Game manager").SetActive(false);
 		}
+	}
+
+	void OnTriggerStay (Collider c) {
 		if (c.gameObject.tag == "Tower") {
 			towerController = c.gameObject.GetComponent<TowerController>();
-			towerController.target = this;
+			if (towerController.target == null) {
+				towerController.target = this;
+			}
+		}
+	}
+
+	void OnTriggerExit (Collider c) {
+		if (c.gameObject.tag == "Tower") {
+			towerController = c.gameObject.GetComponent<TowerController> ();
+			if (this == towerController.target) {
+				towerController.target = null;
+			}
 		}
 	}
 }

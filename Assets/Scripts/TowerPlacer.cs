@@ -71,22 +71,29 @@ public class TowerPlacer : MonoBehaviour {
 				}
 				if (UIEvent) {
 					GameObject currUIElement = EventSystem.current.currentSelectedGameObject;
-					if ((currUIElement == addPanel) || (currUIElement == upgradePanel)
-											|| (currUIElement.transform.parent.gameObject == addPanel)
-					    					|| (currUIElement.transform.parent.gameObject == upgradePanel)) {
+					if ((currUIElement == addPanel) || (currUIElement == upgradePanel) || (currUIElement.transform.parent.gameObject == addPanel) || (currUIElement.transform.parent.gameObject == upgradePanel)) {
 						spotFound = true;
 					}
 				}
 				if (!spotFound) {
+					if (currentSpot != null) {
+						SpotState spotState = currentSpot.GetComponent<SpotState>();
+						if (spotState.towerPlaced != null) {
+							towerController = spotState.towerPlaced.GetComponent<TowerController> ();
+							towerController.projector.SetActive(false);
+						}
+					}
 					currentSpot = null;
 				}
 				if (!poppedUp) {
 					if (spotFound) {
 						currentSpot = spot.gameObject;
-						placed = currentSpot.gameObject.GetComponent<SpotState> ().placed;
+						SpotState spotState = currentSpot.gameObject.GetComponent<SpotState> ();
+						placed = spotState.placed;
 						if (placed) {
 							upgradePanel.GetComponent<RectTransform> ().position = position;
 							currPanel = upgradePanel;
+							spotState.towerPlaced.GetComponent<TowerController>().projector.SetActive(true);
 						}
 						else {
 							addPanel.GetComponent<RectTransform> ().position = position;
@@ -100,10 +107,20 @@ public class TowerPlacer : MonoBehaviour {
 						currentSpot = null;
 					}
 				} else {
+					if (UIEvent) {
+						misclicked = false;
+					}
 					if (misclicked) { /*&& urrentSpot != spot.gameObject)*/
 						if (currentSpot != spot.gameObject) {
 							addPanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
 							upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+							if (currentSpot != null) {
+								SpotState spotState = currentSpot.GetComponent<SpotState>();
+								if (spotState.towerPlaced != null) {
+									towerController = spotState.towerPlaced.GetComponent<TowerController> ();
+									towerController.projector.SetActive(false);
+								}
+							}
 							currPanel = null;
 							currentSpot = null;
 							poppedUp = false;
@@ -146,11 +163,14 @@ public class TowerPlacer : MonoBehaviour {
 	}
 
 	public void UpgradeTower () {
-		towerController = currentSpot.GetComponent<SpotState> ().towerPlaced.GetComponent<TowerController> ();
+		SpotState spotState = currentSpot.GetComponent<SpotState>();
+		towerController = spotState.towerPlaced.GetComponent<TowerController> ();
 		if (gameManager.money >= towerController.upgradeCosts[towerController.currLevel - 1]) {
 			if (towerController.currLevel < towerController.damages.Length) {
 				towerController.currLevel += 1;
 				towerController.gameObject.GetComponent<SphereCollider>().radius = towerController.radiuses[towerController.currLevel - 1];
+				towerController.projector.GetComponent<Projector>().orthographicSize = towerController.radiuses[towerController.currLevel - 1];
+				towerController.projector.SetActive(false);
 				gameManager.money -= towerController.upgradeCosts[towerController.currLevel - 1];
 				currentSpot = null;
 				placed = true;			

@@ -19,6 +19,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &156236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 472720}
+  - 119: {fileID: 11906438}
+  m_Layer: 2
+  m_Name: area projector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
 --- !u!4 &443386
 Transform:
   m_ObjectHideFlags: 1
@@ -26,10 +42,23 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 139224}
   m_LocalRotation: {x: 0, y: -.382648796, z: 0, w: .923893929}
-  m_LocalPosition: {x: 0, y: .598999977, z: 0}
+  m_LocalPosition: {x: .718999982, y: .529999971, z: 2.65100002}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 472720}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!4 &472720
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156236}
+  m_LocalRotation: {x: .707106352, y: -1.67717573e-09, z: 8.97450789e-08, w: .707107246}
+  m_LocalPosition: {x: 0, y: 2.62800002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 443386}
   m_RootOrder: 0
 --- !u!23 &2304754
 MeshRenderer:
@@ -75,6 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireRate: 1
   target: {fileID: 0}
+  projector: {fileID: 156236}
   currLevel: 1
   upgradeCosts:
   - 200
@@ -88,6 +118,24 @@ MonoBehaviour:
   - 2.5
   - 3.5
   - 4.5
+--- !u!119 &11906438
+Projector:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156236}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_NearClipPlane: .800000012
+  m_FarClipPlane: 10
+  m_FieldOfView: 59.6699982
+  m_AspectRatio: 1
+  m_Orthographic: 1
+  m_OrthographicSize: 2.5
+  m_Material: {fileID: 2100000, guid: 056a1df590c655941913171a48738a83, type: 2}
+  m_IgnoreLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!135 &13561436
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -191,6 +239,14 @@ Prefab:
       propertyPath: radiuses.Array.data[2]
       value: 4.5
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: projector
+      value: 
+      objectReference: {fileID: 156236}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 139224}
