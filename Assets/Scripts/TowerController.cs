@@ -4,8 +4,8 @@ using System.Collections;
 public class TowerController : MonoBehaviour {
 	
 	public float fireRate = 1;
-	//public GameObject target;
 	public EnemyController target;
+	public GameObject projector;
 	public int currLevel = 1;
 	public float[] upgradeCosts;
 	public float[] damages;
@@ -21,10 +21,8 @@ public class TowerController : MonoBehaviour {
 	void Update () {
 		if (target != null) {
 			Debug.DrawLine(transform.position, target.transform.position);
-			//targetController = target.GetComponent<EnemyController>();
 			if (canRecieveDamage) {
 				StartCoroutine(TakeDamage(fireRate));
-				//Debug.Log("I'm about to get hit!");
 			}
 		}
 	}

@@ -6,7 +6,8 @@ public class EnemyController : MonoBehaviour {
 	public float speed = 0.5f;
 	[Range(0,100)]	
 	public float health = 100;
-	
+
+	//private GameObjectsManager gameObjectsManager;
 	private TowerController towerController;
 	private GameObject enemyPath;
 	private Transform[] waypoints;
@@ -14,7 +15,7 @@ public class EnemyController : MonoBehaviour {
 
 	void Start () {
 		speed /= 10;
-		enemyPath = GameObject.FindGameObjectWithTag ("Enemy Path");
+		enemyPath = GameObjectsManager.enemyPath;//GameObject.FindGameObjectWithTag ("Enemy Path");
 		waypoints = EnemySpawner.GetChildren (enemyPath);
 	}
 
@@ -43,11 +44,25 @@ public class EnemyController : MonoBehaviour {
 		if (i == waypoints.Length) {
 			Debug.Log("Game Over");
 			Time.timeScale = 0;
-			GameObject.FindGameObjectWithTag("Game manager").SetActive(false);
+			/*GameObject.FindGameObjectWithTag("Game manager")*/GameObjectsManager.gameManager.SetActive(false);
 		}
+	}
+
+	void OnTriggerStay (Collider c) {
 		if (c.gameObject.tag == "Tower") {
 			towerController = c.gameObject.GetComponent<TowerController>();
-			towerController.target = this;
+			if (towerController.target == null) {
+				towerController.target = this;
+			}
+		}
+	}
+
+	void OnTriggerExit (Collider c) {
+		if (c.gameObject.tag == "Tower") {
+			towerController = c.gameObject.GetComponent<TowerController> ();
+			if (this == towerController.target) {
+				towerController.target = null;
+			}
 		}
 	}
 }

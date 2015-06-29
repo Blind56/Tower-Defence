@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
 	private Transform[] text;
 
 	void Start () {
+		GameObjectsManager.gameManager = this.gameObject;
 		Time.timeScale = 1;
 	}
 

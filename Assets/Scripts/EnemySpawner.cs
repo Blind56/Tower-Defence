@@ -18,13 +18,13 @@ public class EnemySpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gameManager = this.GetComponent<GameManager> ();
-		enemyPath = GameObject.FindGameObjectWithTag ("Enemy Path");
+		enemyPath = GameObjectsManager.enemyPath;
 		waypoints = EnemySpawner.GetChildren (enemyPath);
 	}
 
 	void Update () {
 		if (!spawned) {
-			gameManager = this.GetComponent<GameManager> ();
+			//gameManager = this.GetComponent<GameManager> ();
 			if (gameManager.begin) {
 				if (actualNumberOfEnemies < numberOfEnemies) {
 					StartCoroutine (SpawnEnemy (spawnDelay));
@@ -46,11 +46,11 @@ public class EnemySpawner : MonoBehaviour {
 	public static Transform[] GetChildren(GameObject parent)
 	{
 		Transform a = parent.transform;
-		List<Transform> waypoints = new List<Transform>();
+		List<Transform> children = new List<Transform>();
 		foreach (Transform b in a)
 		{
-			waypoints.Add(b);
+			children.Add(b);
 		}
-		return waypoints.ToArray();
+		return children.ToArray();
 	}
 }
