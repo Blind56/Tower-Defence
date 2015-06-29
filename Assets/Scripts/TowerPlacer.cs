@@ -4,13 +4,13 @@ using UnityEngine.EventSystems;
 
 public class TowerPlacer : MonoBehaviour {
 
+	public GameObject addPanel;
+	public GameObject upgradePanel;
 	public GameObject tower;
 	public float groundClearence = 0.5f;
 	
 	private GameManager gameManager;
 	private TowerController towerController;
-	private GameObject addPanel;
-	private GameObject upgradePanel;
 	private GameObject towerSpots;
 	private GameObject currentSpot;
 	private GameObject currPanel;
@@ -28,9 +28,7 @@ public class TowerPlacer : MonoBehaviour {
 	private int fingerId;
 
 	void Start() { 
-		addPanel = GameObject.FindGameObjectWithTag("Add panel");
-		upgradePanel = GameObject.FindGameObjectWithTag("Upgrade panel");
-		towerSpots = GameObject.FindGameObjectWithTag ("Tower spots");
+		towerSpots = GameObjectsManager.towerSpots;//GameObject.FindGameObjectWithTag ("Tower spots");
 		towerController = tower.GetComponent<TowerController>();
 		gameManager = GetComponent<GameManager>();
 		spots = EnemySpawner.GetChildren (towerSpots);
@@ -55,7 +53,6 @@ public class TowerPlacer : MonoBehaviour {
 			spotFound = false;
 			misclicked = true;
 			if (Physics.Raycast (ray, out hit)) {
-
 				foreach (Transform s in spots) {
 					if (hit.collider.gameObject == s.gameObject) {
 						spot = s;
@@ -142,11 +139,12 @@ public class TowerPlacer : MonoBehaviour {
 		if (!placed) {
 			if (gameManager.money >= towerController.upgradeCosts[towerController.currLevel - 1]) { 	
 				gameManager.money -= towerController.upgradeCosts[towerController.currLevel - 1];
-				Instantiate (tower, new Vector3 (placePosition.x, placePosition.y + groundClearence, placePosition	.z), new Quaternion());
-				GameObject[] towersArr = GameObject.FindGameObjectsWithTag("Tower");
+				GameObject newTower = Instantiate (tower, new Vector3 (placePosition.x, placePosition.y + groundClearence, placePosition	.z), new Quaternion()) as GameObject;
+				GameObjectsManager.towers.Add(newTower);
+				//GameObject[] towersArr = GameObject.FindGameObjectsWithTag("Tower");
 				SpotState spotState = currentSpot.GetComponent<SpotState>();
 				spotState.placed = true;	
-				spotState.towerPlaced = towersArr[towersArr.Length - 1];
+				spotState.towerPlaced = newTower.gameObject;
 				addPanel.GetComponent<RectTransform>().position = new Vector2(Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
 				upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
 				currentSpot = null;

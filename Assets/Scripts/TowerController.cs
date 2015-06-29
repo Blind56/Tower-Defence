@@ -11,7 +11,6 @@ public class TowerController : MonoBehaviour {
 	public float[] damages;
 	public float[] radiuses;
 
-	private TowerPlacer gameManager;
 	private bool canRecieveDamage = true;
 
 	void Start () {
