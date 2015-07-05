@@ -21,6 +21,7 @@ public class TowerPlacer : MonoBehaviour {
 	private bool spotFound;
 	private bool placed;
 	private bool misclicked;
+	private bool notPanels;
 	private Vector3 position;
 	private Vector3 placePosition;
 	private Vector3 cameraCurrPosition;
@@ -68,8 +69,16 @@ public class TowerPlacer : MonoBehaviour {
 				}
 				if (UIEvent) {
 					GameObject currUIElement = EventSystem.current.currentSelectedGameObject;
-					if ((currUIElement == addPanel) || (currUIElement == upgradePanel) || (currUIElement.transform.parent.gameObject == addPanel) || (currUIElement.transform.parent.gameObject == upgradePanel)) {
+					if (currUIElement == null) {
 						spotFound = true;
+						notPanels = false;
+					}
+					else if ((currUIElement.transform.parent.gameObject == addPanel) || (currUIElement.transform.parent.gameObject == upgradePanel)) {
+						spotFound = true;
+						notPanels = false;
+					}
+					else {
+						notPanels = true;
 					}
 				}
 				if (!spotFound) {
@@ -105,7 +114,12 @@ public class TowerPlacer : MonoBehaviour {
 					}
 				} else {
 					if (UIEvent) {
-						misclicked = false;
+						if (notPanels) {
+							misclicked = true;
+						} 
+						else {
+							misclicked = false;
+						}
 					}
 					if (misclicked) { /*&& urrentSpot != spot.gameObject)*/
 						if (currentSpot != spot.gameObject) {
