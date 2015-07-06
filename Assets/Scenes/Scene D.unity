@@ -1161,6 +1161,7 @@ GameObject:
   - 114: {fileID: 615063227}
   - 114: {fileID: 615063229}
   - 114: {fileID: 615063230}
+  - 114: {fileID: 615063231}
   m_Layer: 0
   m_Name: _GameManager
   m_TagString: Game manager
@@ -1179,8 +1180,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352a6e2eccf7c7145a95570cab9bb635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addPanel: {fileID: 1772314139}
-  upgradePanel: {fileID: 1886793726}
   tower: {fileID: 139224, guid: 15fd088fecb153c428be8261bd84ca22, type: 2}
   groundClearence: .25
 --- !u!4 &615063228
@@ -1223,6 +1222,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   money: 1600
   begin: 0
+--- !u!114 &615063231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 615063226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b4b302e889ee646a4b0618d68155bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countFrom: 5
 --- !u!4 &626853231 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400368, guid: 3fd45e29e0e6433428160c4dd46e8033, type: 2}
@@ -2170,12 +2181,12 @@ GameObject:
   - 114: {fileID: 1364572583}
   - 114: {fileID: 1364572582}
   m_Layer: 5
-  m_Name: UI
+  m_Name: UIOld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1364572582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2710,10 +2721,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400368, guid: 3fd45e29e0e6433428160c4dd46e8033, type: 2}
   m_PrefabInternal: {fileID: 510793662}
---- !u!1 &1772314139 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 112472, guid: f2aa0f4d4b2cd2240a3e5be588865da3, type: 2}
-  m_PrefabInternal: {fileID: 2075830618}
 --- !u!1001 &1781437854
 Prefab:
   m_ObjectHideFlags: 0
@@ -3096,10 +3103,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400368, guid: 3fd45e29e0e6433428160c4dd46e8033, type: 2}
   m_PrefabInternal: {fileID: 1653963090}
---- !u!1 &1886793726 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 112472, guid: f2aa0f4d4b2cd2240a3e5be588865da3, type: 2}
-  m_PrefabInternal: {fileID: 777218128}
 --- !u!4 &1887472220 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400368, guid: 3fd45e29e0e6433428160c4dd46e8033, type: 2}

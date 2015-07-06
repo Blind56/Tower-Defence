@@ -24,11 +24,13 @@ public class EnemySpawner : MonoBehaviour {
 
 	void Update () {
 		if (!spawned) {
-			//gameManager = this.GetComponent<GameManager> ();
 			if (gameManager.begin) {
 				if (actualNumberOfEnemies < numberOfEnemies) {
 					StartCoroutine (SpawnEnemy (spawnDelay));
 				}
+			}
+			else {
+				actualNumberOfEnemies = 0;
 			}
 		}
 	}
