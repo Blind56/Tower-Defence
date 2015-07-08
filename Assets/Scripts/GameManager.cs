@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour {
 
 	public float money;
 	[HideInInspector]
-	public bool begin;
+	public bool begin = false;
 	
 	private Transform[] text;
 
