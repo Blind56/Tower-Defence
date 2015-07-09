@@ -64,7 +64,6 @@ public class StartOptions : MonoBehaviour {
 
 	}
 
-
 	public void LoadDelayed()
 	{
 		//Pause button now works if escape is pressed since we are no longer in Main menu.

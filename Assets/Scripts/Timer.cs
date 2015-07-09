@@ -9,6 +9,7 @@ public class Timer : MonoBehaviour {
 	private ShowPanels showPanels;
 	private GameObject timer;
 	private Text timerText;
+	private bool endTimer = false;
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +17,7 @@ public class Timer : MonoBehaviour {
 		showPanels.ShowTimer ();
 		timer = showPanels.timer;
 		timerText = timer.GetComponent<Text> ();
+		endTimer = false;
 	}
 	
 	// Update is called once per frame
@@ -25,8 +27,11 @@ public class Timer : MonoBehaviour {
 			timerText.text = string.Format("{0:0.0}", countFrom);
 			//Debug.Log (countFrom);
 		} else {
-			GameObjectsManager.gameManager.GetComponent<GameManager>().BeginWave();
-			showPanels.HideTimer();
+			if (!endTimer) {
+				GameObjectsManager.gameManager.GetComponent<EnemySpawner>().begin = true;
+				showPanels.HideTimer();
+				endTimer = true;
+			}
 		}
 	}
 }

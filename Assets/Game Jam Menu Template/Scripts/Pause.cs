@@ -46,7 +46,7 @@ public class Pause : MonoBehaviour {
 		showPanels.ShowPausePanel ();
 		if (!startScript.inMainMenu) {
 			showPanels.HidePauseButton ();
-			GameObjectsManager.gameManager.SetActive (false);
+			GameObjectsManager.gameManager.GetComponent<TowerPlacer>().enabled = false;
 		}
 	}
 
@@ -61,7 +61,7 @@ public class Pause : MonoBehaviour {
 		showPanels.HidePausePanel ();
 		if (!startScript.inMainMenu) {
 			showPanels.ShowPauseButton ();
-			GameObjectsManager.gameManager.SetActive (true);
+			GameObjectsManager.gameManager.GetComponent<TowerPlacer>().enabled = true;
 		}
 	}
 

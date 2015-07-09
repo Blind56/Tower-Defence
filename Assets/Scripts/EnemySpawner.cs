@@ -8,8 +8,9 @@ public class EnemySpawner : MonoBehaviour {
 	public int numberOfEnemies = 1;
 	public float groundClearence = 0.5f;
 	public float spawnDelay = 1f;
-
-	private GameManager gameManager;
+	[HideInInspector]
+	public bool begin = false;
+	
 	private GameObject enemyPath;
 	private Transform[] waypoints;
 	private bool spawned;
@@ -17,20 +18,20 @@ public class EnemySpawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		gameManager = this.GetComponent<GameManager> ();
 		enemyPath = GameObjectsManager.enemyPath;
 		waypoints = EnemySpawner.GetChildren (enemyPath);
 	}
 
 	void Update () {
 		if (!spawned) {
-			if (gameManager.begin) {
+			if (begin) {
 				if (actualNumberOfEnemies < numberOfEnemies) {
 					StartCoroutine (SpawnEnemy (spawnDelay));
 				}
-			}
-			else {
-				actualNumberOfEnemies = 0;
+				else {
+					begin = false;
+					actualNumberOfEnemies = 0;
+				}
 			}
 		}
 	}
