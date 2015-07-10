@@ -4,15 +4,16 @@ using UnityEngine.EventSystems;
 
 public class TowerPlacer : MonoBehaviour {
 
-	public GameObject addPanel;
-	public GameObject upgradePanel;
 	public GameObject tower;
 	public float groundClearence = 0.5f;
 	
 	private GameManager gameManager;
 	private TowerController towerController;
+	private ShowPanels showPanels;
 	private GameObject towerSpots;
 	private GameObject currentSpot;
+	private GameObject addPanel;
+	private GameObject upgradePanel;
 	private GameObject currPanel;
 	private Transform[] spots;
 	private Transform spot;
@@ -33,6 +34,10 @@ public class TowerPlacer : MonoBehaviour {
 		towerController = tower.GetComponent<TowerController>();
 		gameManager = GetComponent<GameManager>();
 		spots = EnemySpawner.GetChildren (towerSpots);
+		showPanels = GameObjectsManager.UI.GetComponent<ShowPanels> ();
+		//addPanel = showPanels.addPanel;
+		//upgradePanel = showPanels.upgradePanel;
+
 	}
 
 	void Update () {
@@ -73,7 +78,7 @@ public class TowerPlacer : MonoBehaviour {
 						spotFound = true;
 						notPanels = false;
 					}
-					else if ((currUIElement.transform.parent.gameObject == addPanel) || (currUIElement.transform.parent.gameObject == upgradePanel)) {
+					else if ((currUIElement.transform.parent.gameObject == showPanels.addPanel) || (currUIElement.transform.parent.gameObject == showPanels.upgradePanel)) {
 						spotFound = true;
 						notPanels = false;
 					}
@@ -97,13 +102,15 @@ public class TowerPlacer : MonoBehaviour {
 						SpotState spotState = currentSpot.gameObject.GetComponent<SpotState> ();
 						placed = spotState.placed;
 						if (placed) {
-							upgradePanel.GetComponent<RectTransform> ().position = position;
-							currPanel = upgradePanel;
+							showPanels.upgradePanel.SetActive(true);
+							showPanels.upgradePanel.GetComponent<RectTransform> ().position = position;
+							currPanel = showPanels.upgradePanel;
 							spotState.towerPlaced.GetComponent<TowerController>().projector.SetActive(true);
 						}
 						else {
-							addPanel.GetComponent<RectTransform> ().position = position;
-							currPanel = addPanel;
+							showPanels.addPanel.SetActive(true);
+							showPanels.addPanel.GetComponent<RectTransform> ().position = position;
+							currPanel = showPanels.addPanel;
 						}
 						placePosition = spot.transform.position;
 						//Debug.DrawLine (ray.origin, hit.point);
@@ -123,8 +130,10 @@ public class TowerPlacer : MonoBehaviour {
 					}
 					if (misclicked) { /*&& urrentSpot != spot.gameObject)*/
 						if (currentSpot != spot.gameObject) {
-							addPanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
-							upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+							showPanels.addPanel.SetActive(false);
+							showPanels.upgradePanel.SetActive(false);
+							//addPanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+							//upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
 							if (currentSpot != null) {
 								SpotState spotState = currentSpot.GetComponent<SpotState>();
 								if (spotState.towerPlaced != null) {
@@ -159,8 +168,10 @@ public class TowerPlacer : MonoBehaviour {
 				SpotState spotState = currentSpot.GetComponent<SpotState>();
 				spotState.placed = true;	
 				spotState.towerPlaced = newTower.gameObject;
-				addPanel.GetComponent<RectTransform>().position = new Vector2(Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
-				upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+				showPanels.addPanel.SetActive(false);
+				showPanels.upgradePanel.SetActive(false);
+				//addPanel.GetComponent<RectTransform>().position = new Vector2(Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+				//upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
 				currentSpot = null;
 				placed = true;	
 				poppedUp = false;
@@ -185,9 +196,11 @@ public class TowerPlacer : MonoBehaviour {
 				towerController.projector.SetActive(false);
 				gameManager.money -= towerController.upgradeCosts[towerController.currLevel - 1];
 				currentSpot = null;
-				placed = true;			
-				addPanel.GetComponent<RectTransform>().position = new Vector2(Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
-				upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+				placed = true;	
+				showPanels.addPanel.SetActive(false);
+				showPanels.upgradePanel.SetActive(false);
+				//addPanel.GetComponent<RectTransform>().position = new Vector2(Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
+				//upgradePanel.GetComponent<RectTransform> ().position = new Vector2 (Screen.currentResolution.width + 200, Screen.currentResolution.height + 200);
 				poppedUp = false;
 			}
 			else {

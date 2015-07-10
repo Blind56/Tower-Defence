@@ -4,8 +4,6 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
 	public float money;
-	[HideInInspector]
-	public bool begin;
 	
 	private Transform[] text;
 
@@ -20,13 +18,5 @@ public class GameManager : MonoBehaviour {
 
 	public void Restart() {
 		Application.LoadLevel (0);
-	}
-
-	public void BeginWave() {
-		if (!begin) {
-			begin = true;
-		} else {
-			begin = false;
-		}
 	}
 }

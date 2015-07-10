@@ -8,6 +8,7 @@ public static class GameObjectsManager  {
 	public static GameObject addPanel;
 	public static GameObject upgradePanel;
 	public static GameObject towerSpots;
+	public static GameObject UI;
 	public static List<GameObject> towers = new List<GameObject>();
 
 }
